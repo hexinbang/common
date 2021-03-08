@@ -53,8 +53,8 @@ public class RedisTemplateImpl implements IRedisTemplate {
         }
     }
 
-    public String get(@NonNull String key) {
-        return this.redisTemplate.opsForValue().get(key).toString();
+    public Object get(@NonNull String key) {
+        return this.redisTemplate.opsForValue().get(key);
     }
 
     public boolean set(@NonNull String key, @NonNull Object value) {

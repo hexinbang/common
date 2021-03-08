@@ -12,6 +12,16 @@ public class BaseQuery extends PageQuery{
 
     protected List<Integer> ids;
 
+    protected Integer roleId = 4;
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
     public Integer getId() {
         return id;
     }

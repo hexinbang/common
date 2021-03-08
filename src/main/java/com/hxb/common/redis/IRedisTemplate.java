@@ -18,7 +18,7 @@ public interface IRedisTemplate {
 
     void delete(String... key);
 
-    String get(String key);
+    Object get(String key);
 
     boolean set(String key, Object value);
 

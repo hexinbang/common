@@ -14,6 +14,7 @@ import java.util.List;
  * @date 2019/9/9 16:36
  */
 public  class BaseServiceImpl<T,Q extends BaseQuery> implements BaseService<T,Q> {
+
     @Autowired
     private BaseDao<T,Q> baseDao;
 

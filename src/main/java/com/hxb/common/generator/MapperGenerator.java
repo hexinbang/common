@@ -30,11 +30,11 @@ public class MapperGenerator {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private String daoPath;
+    private String namespacePrefix = "org.hxb.common.dao";
 
-    private String templateDir;
+    private String templateDir = "templates";
 
-    private String outputDir;
+    private String outputDir = "mappers";
 
     /**
      * 使用Freemarker模板生成mapper文件
@@ -48,9 +48,9 @@ public class MapperGenerator {
         configuration.setDefaultEncoding("UTF-8");
         BufferedWriter bufferedWriter=null;
         try {
-            configuration.setDirectoryForTemplateLoading(new File(templateDir));
+            configuration.setClassForTemplateLoading(this.getClass(),"/templates");
             Map<String,Object>dataMap=getDataMap(entityClazz,queryClazz);
-            String mapperFileName=entityClazz.getSimpleName()+"Dao.xml";
+            String mapperFileName=entityClazz.getSimpleName()+"Mapper.xml";
 
             Template implTemplate=configuration.getTemplate("MapperImplTemplate.ftl");
             File mapperFile1=new File(outputDir+"sql_impl/"+mapperFileName);
@@ -105,13 +105,13 @@ public class MapperGenerator {
     /**
      * 设置属性
      * 如果需要改变相应的文件路径。否则使用默认的参数
-     * @param daoPath
+     * @param namespacePrefix
      * @param templateDir
      * @param outputDir
      */
-    public void setConfig(String daoPath,String templateDir,String outputDir){
-        if(daoPath != null && !daoPath.isEmpty()){
-            this.daoPath = daoPath;
+    public void setConfig(String namespacePrefix,String templateDir,String outputDir){
+        if(namespacePrefix != null && !namespacePrefix.isEmpty()){
+            this.namespacePrefix = namespacePrefix;
         }
         if(templateDir != null && !templateDir.isEmpty()){
             this.templateDir = templateDir;
@@ -122,25 +122,21 @@ public class MapperGenerator {
     }
 
     private void initDefaultConfig(){
-        File file=new File(".");
-        String relativePath=file.getAbsolutePath();
-        String projectPath=relativePath.substring(0,relativePath.lastIndexOf("\\"));
-        projectPath=projectPath.substring(0,projectPath.lastIndexOf("\\"));
-        if(this.daoPath == null){
-            this.daoPath = "org.kelab.swustoj_teach.dao";
+        if(this.namespacePrefix == null){
+            this.namespacePrefix = "org.hxb.common.dao";
         }
         if(this.templateDir == null){
-            this.templateDir = projectPath+"/teach-common/src/main/resources/templates";
+            this.templateDir = "templates";
         }
         if(this.outputDir == null){
-            this.outputDir = projectPath+"/teach-dal/src/main/resources/mybatis/";
+            this.outputDir = "mappers";
         }
     }
 
     private Map<String,Object> getDataMap(@NonNull Class entityClazz,@NonNull Class queryClazz){
         System.out.println("正在获取Class:"+entityClazz.getSimpleName()+"的数据集合...");
         StringBuilder sb=new StringBuilder();
-        sb.append(daoPath).append(".").append(entityClazz.getSimpleName()).append("Mapper");
+        sb.append(namespacePrefix).append(".").append(entityClazz.getSimpleName()).append("Mapper");
         String namespace=sb.toString();
         String tableName=getTableName(entityClazz);
         String poType=entityClazz.getTypeName();
